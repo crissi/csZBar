@@ -453,37 +453,24 @@ implements SurfaceHolder.Callback {
     private void tryStartPreview () {
         if(holder != null) {
             try {
-                int rotation = getWindowManager().getDefaultDisplay().getRotation();
-                switch(rotation)
-                {
-                case 0: // '\0'
-                    rotation = 90;
-                    break;
-
-                case 1: // '\001'
-                    rotation = 0;
-                    break;
-
-                case 2: // '\002'
-                    rotation = 270;
-                    break;
-
-                case 3: // '\003'
-                    rotation = 180;
-                    break;
-
-                default:
-                    rotation = 90;
-                    break;
-                }
+  
                 // 90 degrees rotation for Portrait orientation Activity.
-                camera.setDisplayOrientation(rotation);
+                camera.setDisplayOrientation(90);
                 android.hardware.Camera.Parameters camParams = camera.getParameters();
                 
                 //camParams.setFlashMode(Parameters.FLASH_MODE_TORCH);
-                
-                    camParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-                    camera.setParameters(camParams);
+
+
+                List<String> supportedFocusModes = camParams.getSupportedFocusModes();
+
+                if ( supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE) ) {
+                    
+                    camParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);   
+
+                    Log.d("test", "has conti mode" );
+
+                }
+                camera.setParameters(camParams);   
                 
                 camera.setPreviewDisplay(holder);
                 camera.setPreviewCallback(previewCb);
