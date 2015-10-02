@@ -107,9 +107,11 @@
             lineView.backgroundColor = [UIColor redColor];
             [polygonView addSubview:lineView];
 
+	
+            self.scanReader.scanCrop = CGRectMake  ( 0.54, 0, 0.005, 1);
             self.scanReader.cameraOverlayView = polygonView;
             //[self.scanReader.view addSubview:polygonView];
-        }
+        } 
 
         [self.viewController presentModalViewController: self.scanReader animated: YES];
     }
