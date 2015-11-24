@@ -92,6 +92,13 @@
         
     }
 }
+
+
+-(NSUInteger) supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 /*
  #pragma mark - Navigation
  
