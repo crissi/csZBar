@@ -31,6 +31,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+
 import net.sourceforge.zbar.ImageScanner;
 import net.sourceforge.zbar.Image;
 import net.sourceforge.zbar.Symbol;
@@ -188,7 +189,7 @@ implements SurfaceHolder.Callback {
             camParams.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
         }
         if (android.os.Build.VERSION.SDK_INT >= 14) {
-        	camParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+            camParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         }
 
         try { camera.setParameters(camParams); }
@@ -322,8 +323,8 @@ implements SurfaceHolder.Callback {
         {
             Log.d("csZBar", (new StringBuilder("Unsupported camera parameter reported for flash mode: ")).append(flashMode).toString());
         } catch (IOException e) {
-        	Log.d("csZBar", (new StringBuilder("Wrong holder data")).append(flashMode).toString());
-		}
+            Log.d("csZBar", (new StringBuilder("Wrong holder data")).append(flashMode).toString());
+        }
     }
     // Continuously auto-focus -----------------------------------------
     // For API Level < 14
@@ -460,21 +461,31 @@ implements SurfaceHolder.Callback {
                 
                 //camParams.setFlashMode(Parameters.FLASH_MODE_TORCH);
 
-
                 List<String> supportedFocusModes = camParams.getSupportedFocusModes();
+                //Log.d("os",supportedFocusModes.toString());
 
                 if ( supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE) ) {
                     
                     camParams.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);   
 
-                    Log.d("test", "has conti mode" );
+                    //Log.d("test", "has conti mode" );
 
                 }
+                else if (supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+                    // auto focus on request only
+                    //Log.d("os","I am here");
+                    camParams.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                }
+
+
                 camera.setParameters(camParams);   
                 
                 camera.setPreviewDisplay(holder);
                 camera.setPreviewCallback(previewCb);
                 camera.startPreview();
+
+                //Log.d("os",android.os.Build.VERSION.SDK_INT + "");
+
 
                 if (android.os.Build.VERSION.SDK_INT >= 14) {
                     camera.autoFocus(autoFocusCb); // We are not using any of the
