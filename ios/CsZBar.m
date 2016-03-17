@@ -98,21 +98,30 @@
             CGFloat screenWidth = screenRect.size.width;
             CGFloat screenHeight = screenRect.size.height;
             CGFloat dim = screenWidth < screenHeight ? screenWidth / 1.1 : screenHeight / 1.1;
-            UIView *polygonView = [[UIView alloc] initWithFrame: CGRectMake  ( (screenWidth/2) - (dim/2), (screenHeight/2) - (dim/2), dim, dim)];
+//            UIView *polygonView = [[UIView alloc] initWithFrame: CGRectMake  ( (screenWidth/2) - (dim/2), (screenHeight/2) - (dim/2), dim, dim)];
+           UIView *polygonView = [[UIView alloc] initWithFrame: CGRectMake ( (screenWidth/2) - (dim/2), (screenHeight/2) - (dim/2), dim, dim)]; 
             //polygonView.center = self.scanReader.view.center;
             //polygonView.layer.borderColor = [UIColor greenColor].CGColor;
             //polygonView.layer.borderWidth = 3.0f;
 
-            UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0,dim / 2, dim, 1)];
+ //          UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0,dim / 2, dim, 1)];
+			UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(dim / 2, 0, 1, dim)];
             lineView.backgroundColor = [UIColor redColor];
             [polygonView addSubview:lineView];
 
 	
-            self.scanReader.scanCrop = CGRectMake  ( 0.54, 0, 0.005, 1);
+//            self.scanReader.scanCrop = CGRectMake  ( 0.54, 0, 0.005, 1);
             self.scanReader.cameraOverlayView = polygonView;
             //[self.scanReader.view addSubview:polygonView];
         } 
 
+        // Force only QR codes:
+        [self.scanReader.scanner setSymbology: 0 config: ZBAR_CFG_ENABLE to: 0];
+        [self.scanReader.scanner setSymbology: ZBAR_QRCODE config: ZBAR_CFG_ENABLE to: 1];
+		// need this to make the little Filament codes work well
+        [self.scanReader.scanner setSymbology: 0 config: ZBAR_CFG_X_DENSITY to: 1];
+        [self.scanReader.scanner setSymbology: 0 config: ZBAR_CFG_Y_DENSITY to: 1];
+        
         [self.viewController presentModalViewController: self.scanReader animated: YES];
     }
 }
