@@ -11,7 +11,6 @@
 
 @end
 
-
 #pragma mark - Synthesize
 
 @implementation CsZBar
@@ -20,19 +19,17 @@
 @synthesize scanCallbackId;
 @synthesize scanReader;
 
-
 #pragma mark - Cordova Plugin
 
-- (void)pluginInitialize
-{
+- (void)pluginInitialize {
     self.scanInProgress = NO;
 }
+
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     return;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES; //(interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 /*
@@ -48,10 +45,9 @@
 
 #pragma mark - Plugin API
 
-- (void)scan: (CDVInvokedUrlCommand*)command;
+- (void)scan: (CDVInvokedUrlCommand*)command; 
 {
-
-    if(self.scanInProgress) {
+    if (self.scanInProgress) {
         [self.commandDelegate
          sendPluginResult: [CDVPluginResult
                             resultWithStatus: CDVCommandStatus_ERROR
@@ -76,16 +72,23 @@
         self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
 
         NSString *flash = [params objectForKey:@"flash"];
-       if([flash isEqualToString:@"on"]) {
+        
+        if ([flash isEqualToString:@"on"]) {
             self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOn;
-        } else if([flash isEqualToString:@"off"]) {
+        } else if ([flash isEqualToString:@"off"]) {
             self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeOff;
-        }else if([flash isEqualToString:@"auto"]) {
-             self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeAuto;
+        }else if ([flash isEqualToString:@"auto"]) {
+            self.scanReader.cameraFlashMode = UIImagePickerControllerCameraFlashModeAuto;
         }
 
         // Hack to hide the bottom bar's Info button... originally based on http://stackoverflow.com/a/16353530
-        UIView *infoButton = [[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:3];
+	NSInteger infoButtonIndex;
+        if ([[[UIDevice currentDevice] systemVersion] compare:@"10.0" options:NSNumericSearch] != NSOrderedAscending) {
+            infoButtonIndex = 1;
+        } else {
+            infoButtonIndex = 3;
+        }
+        UIView *infoButton = [[[[[self.scanReader.view.subviews objectAtIndex:2] subviews] objectAtIndex:0] subviews] objectAtIndex:infoButtonIndex];
         [infoButton setHidden:YES];
         // Add an action in current code file (i.e. target)
       //  [infoButton addTarget: action:@selector(buttonPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -126,31 +129,28 @@
     }
 }
 
-- (void)toggleflash{
+- (void)toggleflash {
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
     [device lockForConfiguration:nil];
     if (device.torchAvailable == 1) {
         if (device.torchMode == 0) {
             [device setTorchMode:AVCaptureTorchModeOn];
             [device setFlashMode:AVCaptureFlashModeOn];
-            
-        }else{
+        } else {
             [device setTorchMode:AVCaptureTorchModeOff];
             [device setFlashMode:AVCaptureFlashModeOff];
         }
-
     }
-        [device unlockForConfiguration];
-
+    
+    [device unlockForConfiguration];
 }
 
 #pragma mark - Helpers
 
-- (void)sendScanResult: (CDVPluginResult*)result
-{
+- (void)sendScanResult: (CDVPluginResult*)result {
     [self.commandDelegate sendPluginResult: result callbackId: self.scanCallbackId];
 }
-
 
 #pragma mark - ZBarReaderDelegate
 
@@ -158,9 +158,13 @@
     return;
 }
 
-- (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info
-{
+- (void)imagePickerController:(UIImagePickerController*)picker didFinishPickingMediaWithInfo:(NSDictionary*)info {
+    if ([self.scanReader isBeingDismissed]) {
+        return;
+    }
+    
     id<NSFastEnumeration> results = [info objectForKey: ZBarReaderControllerResults];
+    
     ZBarSymbol *symbol = nil;
     for(symbol in results) break; // get the first result
 
@@ -188,6 +192,5 @@
                            resultWithStatus: CDVCommandStatus_ERROR
                            messageAsString: @"Failed"]];
 }
-
 
 @end
