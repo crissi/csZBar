@@ -63,16 +63,19 @@
             </feature>
         </config-file>
 
+
+        <!-- Declare Camera Usage for iOS10+ -->
         <config-file target="*-Info.plist" parent="NSCameraUsageDescription">
-           <string>Stregkode scanning</string>
+            <string>For Barcode Scanning</string>
         </config-file>
+        
 
         <framework src="AVFoundation.framework" />
         <framework src="CoreMedia.framework" />
         <framework src="CoreVideo.framework" />
         <framework src="QuartzCore.framework" />
         <framework src="libiconv.dylib" />
-        <source-file src="ios/libzbar.a" framework="true" />
+        <source-file src="ios/libzbar.a" framework="true" custom="true"/>
         <source-file src="ios/CsZBar.m" />
         <header-file src="ios/CsZBar.h" />
         <source-file src="ios/AlmaZBarReaderViewController.m" />
