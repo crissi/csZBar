@@ -118,9 +118,6 @@
             //[self.scanReader.view addSubview:polygonView];
         } 
 
-        // Force only QR codes:
-        [self.scanReader.scanner setSymbology: 0 config: ZBAR_CFG_ENABLE to: 0];
-        [self.scanReader.scanner setSymbology: ZBAR_QRCODE config: ZBAR_CFG_ENABLE to: 1];
 		// need this to make the little Filament codes work well
         [self.scanReader.scanner setSymbology: 0 config: ZBAR_CFG_X_DENSITY to: 1];
         [self.scanReader.scanner setSymbology: 0 config: ZBAR_CFG_Y_DENSITY to: 1];
