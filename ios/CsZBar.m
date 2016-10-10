@@ -107,13 +107,13 @@
             //polygonView.layer.borderColor = [UIColor greenColor].CGColor;
             //polygonView.layer.borderWidth = 3.0f;
 
- //          UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0,dim / 2, dim, 1)];
-			UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(dim / 2, 0, 1, dim)];
+            UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0,dim / 2, dim, 1)];
+			//UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(dim / 2, 0, 1, dim)];
             lineView.backgroundColor = [UIColor redColor];
             [polygonView addSubview:lineView];
 
 	
-//            self.scanReader.scanCrop = CGRectMake  ( 0.54, 0, 0.005, 1);
+            self.scanReader.scanCrop = CGRectMake  ( 0.54, 0, 0.005, 1);
             self.scanReader.cameraOverlayView = polygonView;
             //[self.scanReader.view addSubview:polygonView];
         } 
